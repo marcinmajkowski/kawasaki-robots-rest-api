@@ -3,7 +3,7 @@ package com.marcinmajkowski.kawasakirobotsrestapi.domain;
 /**
  * Created by Marcin on 2015-08-20.
  */
-public class Location {
+public final class Location {
     private final String name;
     private final double x;
     private final double y;
@@ -21,7 +21,7 @@ public class Location {
         this.o = o;
         this.a = a;
         this.t = t;
-        this.joints = joints;
+        this.joints = joints == null ? null : joints.clone();
     }
 
     public String getName() {
@@ -53,6 +53,6 @@ public class Location {
     }
 
     public double[] getJoints() {
-        return joints;
+        return joints == null ? null : joints.clone();
     }
 }
