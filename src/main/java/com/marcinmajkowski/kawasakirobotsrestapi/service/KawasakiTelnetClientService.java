@@ -68,6 +68,10 @@ public class KawasakiTelnetClientService {
             e.printStackTrace();
         }
 
+        System.out.println("--- Response:");
+        System.out.println(response);
+        System.out.println("---");
+
         return response;
     }
 
