@@ -2,19 +2,21 @@ package com.marcinmajkowski.kawasakirobotsrestapi.service;
 
 import org.apache.commons.net.telnet.InvalidTelnetOptionException;
 import org.apache.commons.net.telnet.TelnetClient;
-import org.apache.commons.net.telnet.TelnetNotificationHandler;
 import org.apache.commons.net.telnet.TerminalTypeOptionHandler;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.util.Properties;
 
 @Service
 public class KawasakiTelnetClientService {
 
-    private static final String HOSTNAME = "localhost";
-    private static final int PORT = 9105;
+    private final String hostname;
+    private final int port;
+    private final String login;
+
     private final TelnetClient telnetClient = new TelnetClient();
 
     public KawasakiTelnetClientService() {
@@ -28,6 +30,16 @@ public class KawasakiTelnetClientService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        Properties configFile = new Properties();
+        try (InputStream stream = this.getClass().getClassLoader().getResourceAsStream("robot_connection.properties")) {
+            configFile.load(stream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        hostname = configFile.getProperty("HOSTNAME");
+        port = Integer.parseInt(configFile.getProperty("PORT"));
+        login = configFile.getProperty("LOGIN");
     }
 
     public synchronized String query(String command) {
@@ -77,7 +89,7 @@ public class KawasakiTelnetClientService {
 
     private void connect() {
         try {
-            telnetClient.connect(HOSTNAME, PORT);
+            telnetClient.connect(hostname, port);
             login();
         } catch (IOException e) {
             System.err.println("Error connecting to Telnet server: " + e.getMessage());
@@ -86,7 +98,7 @@ public class KawasakiTelnetClientService {
 
     private void login() {
         PrintWriter out = new PrintWriter(telnetClient.getOutputStream(), true);
-        out.println("as");
+        out.println(login);
         System.out.println("Login sent!");
         InputStream in = telnetClient.getInputStream();
         try {
