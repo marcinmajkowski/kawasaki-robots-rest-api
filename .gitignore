@@ -1,4 +1,4 @@
-.idea
-target
-web
+/.idea
+/target
+/web
 *.iml
