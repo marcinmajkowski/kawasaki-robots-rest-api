@@ -61,6 +61,13 @@ public class KawasakiTelnetClientService {
         }
         System.out.println("Response read!");
 
+        try {
+            telnetClient.disconnect();
+            System.out.println("Disconnected!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         return response;
     }
 
