@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 @Service
@@ -42,36 +44,49 @@ public class KawasakiTelnetClientService {
         login = configFile.getProperty("LOGIN");
     }
 
-    public synchronized String query(String command) {
+    public String getResponse(String command) {
+        return (getResponses(command)).get(0);
+    }
+
+    public synchronized List<String> getResponses(String... commands) {
         if (!telnetClient.isConnected()) {
             connect();
         }
+        List<String> responses = new ArrayList<>();
 
-        // discard everything from stream
-        InputStream in = telnetClient.getInputStream();
-        System.out.println("Discarding stream content...");
-        try {
-            while (in.available() > 0) {
-                in.read();
+        for (String command : commands) {
+            // discard everything from stream
+            InputStream in = telnetClient.getInputStream();
+            System.out.println("Discarding stream content...");
+            try {
+                while (in.available() > 0) {
+                    in.read();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        PrintWriter out = new PrintWriter(telnetClient.getOutputStream(), true);
-        out.println(command);
+            PrintWriter out = new PrintWriter(telnetClient.getOutputStream(), true);
+            out.println(command);
 
-        System.out.println("Reading response...");
-        String response = "";
-        int readByte;
-        try {
-            while ((readByte = in.read()) != '>') {
-                response = response + (char) readByte;
+            System.out.println("Reading response...");
+            StringBuilder response = new StringBuilder();
+            int readByte;
+            try {
+                while ((readByte = in.read()) != '>') {
+                    response.append((char) readByte);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Response read!");
+
+            System.out.println("--- Response:");
+            System.out.println(response);
+            System.out.println("---");
+
+            responses.add(response.toString());
         }
-        System.out.println("Response read!");
 
         try {
             telnetClient.disconnect();
@@ -80,11 +95,7 @@ public class KawasakiTelnetClientService {
             e.printStackTrace();
         }
 
-        System.out.println("--- Response:");
-        System.out.println(response);
-        System.out.println("---");
-
-        return response;
+        return responses;
     }
 
     private void connect() {

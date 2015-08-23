@@ -4,9 +4,6 @@ import com.marcinmajkowski.kawasakirobotsrestapi.domain.Location;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * Created by Marcin on 2015-08-20.
  */
@@ -25,7 +22,7 @@ public class KawasakiRobotService {
     }
 
     public Location getToolCenterPoint() {
-        String response = kawasakiTelnetClientService.query("where");
+        String response = kawasakiTelnetClientService.getResponse("where");
 /* Response:
 where
      JT1       JT2       JT3       JT4       JT5       JT6
@@ -50,7 +47,7 @@ where
     }
 
     public String getStatus() {
-        return kawasakiTelnetClientService.query("status");
+        return kawasakiTelnetClientService.getResponse("status");
     }
 
 }
