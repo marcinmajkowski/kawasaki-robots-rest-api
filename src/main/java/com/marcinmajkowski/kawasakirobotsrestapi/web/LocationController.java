@@ -1,12 +1,10 @@
 package com.marcinmajkowski.kawasakirobotsrestapi.web;
 
 import com.marcinmajkowski.kawasakirobotsrestapi.domain.Location;
+import com.marcinmajkowski.kawasakirobotsrestapi.domain.Transformation;
 import com.marcinmajkowski.kawasakirobotsrestapi.service.KawasakiRobotService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,6 +28,15 @@ public class LocationController {
         return kawasakiRobotService.getLocationByName(name);
     }
 
+    @RequestMapping(path = "/{name}", method = RequestMethod.POST, consumes = "application/json")
+    public void add(@RequestBody Transformation transformation,
+                    @PathVariable String name) {
+        //TODO
+        System.out.println(transformation + " " + name);
+        kawasakiRobotService.addLocation(new Location(name, transformation, null));
+    }
+
+    //TODO /locations (without / at the end) doesn't work
     @RequestMapping(path = "/", method = RequestMethod.GET)
     public List<String> getAllNames() {
         return kawasakiRobotService.getAllLocationNames();
