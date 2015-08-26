@@ -134,4 +134,15 @@ Change? (If not, Press RETURN only.)
 
 */
     }
+
+    public void deleteLocation(String name) {
+        //TODO prevent injecting malicious command
+        String command = "delete /l " + name + "\r\n" + "1";
+        kawasakiTelnetClientService.getResponse(command);
+/* Whole process:
+delete /l p1
+Are you sure ? (Yes:1, No:0) 1
+
+*/
+    }
 }

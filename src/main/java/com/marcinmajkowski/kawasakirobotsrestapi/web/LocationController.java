@@ -31,9 +31,14 @@ public class LocationController {
     @RequestMapping(path = "/{name}", method = RequestMethod.POST, consumes = "application/json")
     public void add(@RequestBody Transformation transformation,
                     @PathVariable String name) {
-        //TODO
-        System.out.println(transformation + " " + name);
+        //TODO handle arrays
+        //TODO different result codes for different results
         kawasakiRobotService.addLocation(new Location(name, transformation, null));
+    }
+
+    @RequestMapping(path = "/{name}", method = RequestMethod.DELETE)
+    public void delete(@PathVariable String name) {
+        kawasakiRobotService.deleteLocation(name);
     }
 
     //TODO /locations (without / at the end) doesn't work

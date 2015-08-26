@@ -14,6 +14,7 @@ import java.util.Properties;
 
 @Service
 public class KawasakiTelnetClientService {
+    //TODO add timeouts in while loops
 
     private final String hostname;
     private final int port;
