@@ -51,4 +51,9 @@ public class LocationController {
     Location toolCenterPoint() {
         return kawasakiRobotService.getToolCenterPoint();
     }
+
+    @RequestMapping(path = "/null", method = RequestMethod.GET)
+    Location nullLocation() {
+        return new Location("null", new Transformation(0, 0, 0, 0, 0, 0), null);
+    }
 }

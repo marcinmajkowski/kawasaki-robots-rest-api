@@ -15,6 +15,9 @@ import java.util.Properties;
 @Service
 public class KawasakiTelnetClientService {
     //TODO add timeouts in while loops
+    //TODO maximum number of characters for one command is 128
+    //TODO implement save/load
+    //TODO add support for scientific notation (?)
 
     private final String hostname;
     private final int port;
@@ -120,6 +123,8 @@ public class KawasakiTelnetClientService {
             e.printStackTrace();
         }
         System.out.println("Logged in!");
+        //TODO send "messages off" to disable messages output to the terminal
+        //TODO send "screen on/off" (not sure yet) to disable paging of the terminal output
     }
 
     private void disconnect() {

@@ -3,7 +3,7 @@ package com.marcinmajkowski.kawasakirobotsrestapi.domain;
 /**
  * Created by Marcin on 2015-08-25.
  */
-public class Location {
+public class Location /* Pose */ {
     private final String name;
     private final Transformation transformation;
     private final JointDisplacement jointDisplacement;
