@@ -14,6 +14,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/locations")
 public class LocationController {
+    //TODO multidimensional arrays
+    //TODO store current pose in new variable (here pose vs. here #pose !)
+    //TODO relatives: HERE plate+object+pickup (defines pickup)
 
     private final KawasakiRobotService kawasakiRobotService;
 
@@ -56,4 +59,7 @@ public class LocationController {
     Location nullLocation() {
         return new Location("null", new Transformation(0, 0, 0, 0, 0, 0), null);
     }
+
+    //TODO /tool
+    //TODO /base
 }

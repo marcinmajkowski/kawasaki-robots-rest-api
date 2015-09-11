@@ -3,10 +3,12 @@ package com.marcinmajkowski.kawasakirobotsrestapi.service;
 import com.marcinmajkowski.kawasakirobotsrestapi.domain.JointDisplacement;
 import com.marcinmajkowski.kawasakirobotsrestapi.domain.Location;
 import com.marcinmajkowski.kawasakirobotsrestapi.domain.Transformation;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.marcinmajkowski.robotics.kawasaki.TcpClient;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.List;
 
 /**
@@ -15,12 +17,8 @@ import java.util.List;
 @Service
 public class KawasakiRobotService {
 
-    private final KawasakiTelnetClientService kawasakiTelnetClientService;
-
-    @Autowired
-    public KawasakiRobotService(KawasakiTelnetClientService kawasakiTelnetClientService) {
-        this.kawasakiTelnetClientService = kawasakiTelnetClientService;
-    }
+    //TODO load ip from properties file
+    private final TcpClient tcpClient = new TcpClient("192.168.56.1");
 
     public String getModel() {
         //TODO
@@ -28,7 +26,12 @@ public class KawasakiRobotService {
     }
 
     public Location getToolCenterPoint() {
-        String response = kawasakiTelnetClientService.getResponse("where");
+        String response = null;
+        try {
+            response = tcpClient.getResponse("where");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 /* Response:
 where
      JT1       JT2       JT3       JT4       JT5       JT6
@@ -37,6 +40,7 @@ where
      0.000     0.000    80.000     0.000     0.000     0.000
 
 */
+        //TODO NullPointerException
         String[] tokens = response.split("\\s+");
         double x = Double.parseDouble(tokens[19]);
         double y = Double.parseDouble(tokens[20]);
@@ -55,17 +59,70 @@ where
     }
 
     public String getStatus() {
-        return kawasakiTelnetClientService.getResponse("status");
+        String response = null;
+        try {
+            response = tcpClient.getResponse("status");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return response;
+    }
+
+    public enum SaveCommandArgument {
+        PROGRAMS("/p"),
+        LOCATIONS("/l"),
+        REALS("/r"),
+        STRINGS("/s"),
+        AUXILIARY_INFORMATION("/a"),
+        SYSTEM_DATA("/sys"),
+        ROBOT_DATA("/rob"),
+        ERROR_LOG_DATA("/elog");
+
+        private final String literal;
+
+        SaveCommandArgument(String literal) {
+            this.literal = literal;
+        }
+
+        public String getLiteral() {
+            return literal;
+        }
+    }
+
+    public String getData() {
+        return getData(EnumSet.noneOf(SaveCommandArgument.class));
+    }
+
+    public String getData(EnumSet<SaveCommandArgument> arguments) {
+        StringBuilder command = new StringBuilder();
+        command.append("save");
+        for (SaveCommandArgument argument : arguments) {
+            command.append(argument.getLiteral());
+        }
+        command.append(" filename.as"); //TODO
+        String response = null;
+        try {
+            response = tcpClient.getResponse(command.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return response;
     }
 
     public List<String> getAllLocationNames() {
-        String response = kawasakiTelnetClientService.getResponse("dir /l");
+        String response = null;
+        try {
+            response = tcpClient.getResponse("dir /l");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 /* Response:
 dir /l
 Location
  p1        p2        p3        p4        p5        p6[]
 
 */
+        //TODO NullPointerException
         String[] tokens = response.split("\\s+");
         List<String> result = Arrays.asList(tokens).subList(tokens.length > 3 ? 3 : tokens.length, tokens.length);
 
@@ -74,7 +131,12 @@ Location
 
     public Location getLocationByName(String name) {
         //TODO
-        String response = kawasakiTelnetClientService.getResponse("list /l " + name);
+        String response = null;
+        try {
+            response = tcpClient.getResponse("list /l " + name);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 /* Response (location exists):
 list /l p1
 Location
@@ -89,6 +151,7 @@ p12:Variable (or program) does not exist.
 */
         //TODO corner cases
         //TODO arrays
+        //TODO NullPointerException
         String lines[] = response.split("\\r?\\n");
         String[] tokens = null;
         // find the line that starts with name
@@ -124,7 +187,11 @@ p12:Variable (or program) does not exist.
         double t = transformation.getT();
         String command = "point " + name + " = trans("
                 + x + ", " + y + ", " + z + ", " + o + ", " + a + ", " + t + ")\r\n";
-        kawasakiTelnetClientService.getResponse(command);
+        try {
+            tcpClient.getResponse(command);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 /* Whole process:
 point addme = trans(10.0, 11.0, 12.0, 13.0, 14.0, 15.0)
     X[mm]     Y[mm]     Z[mm]     O[deg]    A[deg]    T[deg]
@@ -138,7 +205,11 @@ Change? (If not, Press RETURN only.)
     public void deleteLocation(String name) {
         //TODO prevent injecting malicious command
         String command = "delete /l " + name + "\r\n" + "1";
-        kawasakiTelnetClientService.getResponse(command);
+        try {
+            tcpClient.getResponse(command);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 /* Whole process:
 delete /l p1
 Are you sure ? (Yes:1, No:0) 1
