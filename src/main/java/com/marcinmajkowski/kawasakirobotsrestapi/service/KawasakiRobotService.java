@@ -129,6 +129,15 @@ Location
         return result;
     }
 
+    //TODO this is temporary
+    public void load(String filename) {
+        try {
+            tcpClient.getResponse("load " + filename);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public Location getLocationByName(String name) {
         //TODO
         String response = null;

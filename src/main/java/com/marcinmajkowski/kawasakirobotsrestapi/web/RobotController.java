@@ -7,7 +7,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,6 +30,24 @@ public class RobotController {
     @RequestMapping("/status")
     String status() {
         return kawasakiRobotService.getStatus();
+    }
+
+    //TODO temporary
+    @RequestMapping(value = "/load", method = RequestMethod.POST)
+    @ResponseBody String load(@RequestParam("file") MultipartFile file) {
+        if (!file.isEmpty()) {
+            try {
+                byte[] bytes = file.getBytes();
+                BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(new File("temp")));
+                stream.write(bytes);
+                stream.close();
+                kawasakiRobotService.load("temp");
+                return "You successfully uploaded file!";
+            } catch (IOException e) {
+                return "You failed to upload file - " + e.getMessage();
+            }
+        }
+        return "Empty file";
     }
 
     @RequestMapping(value = "/data/{fileName:.+}", method = RequestMethod.GET)
