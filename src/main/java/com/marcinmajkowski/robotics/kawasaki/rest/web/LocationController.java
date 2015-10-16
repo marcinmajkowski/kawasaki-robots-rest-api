@@ -1,16 +1,13 @@
-package com.marcinmajkowski.kawasakirobotsrestapi.web;
+package com.marcinmajkowski.robotics.kawasaki.rest.web;
 
-import com.marcinmajkowski.kawasakirobotsrestapi.domain.Location;
-import com.marcinmajkowski.kawasakirobotsrestapi.domain.Transformation;
-import com.marcinmajkowski.kawasakirobotsrestapi.service.KawasakiRobotService;
+import com.marcinmajkowski.robotics.kawasaki.rest.domain.Location;
+import com.marcinmajkowski.robotics.kawasaki.rest.domain.Transformation;
+import com.marcinmajkowski.robotics.kawasaki.rest.service.KawasakiRobotService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * Created by Marcin on 2015-08-25.
- */
 @RestController
 @RequestMapping("/locations")
 public class LocationController {
@@ -25,13 +22,13 @@ public class LocationController {
         this.kawasakiRobotService = kawasakiRobotService;
     }
 
-    @RequestMapping(path = "/{name}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{name}", method = RequestMethod.GET)
     public Location getByName(@PathVariable String name) {
         //TODO handle arrays
         return kawasakiRobotService.getLocationByName(name);
     }
 
-    @RequestMapping(path = "/{name}", method = RequestMethod.POST, consumes = "application/json")
+    @RequestMapping(value = "/{name}", method = RequestMethod.POST, consumes = "application/json")
     public void add(@RequestBody Transformation transformation,
                     @PathVariable String name) {
         //TODO handle arrays
@@ -39,23 +36,22 @@ public class LocationController {
         kawasakiRobotService.addLocation(new Location(name, transformation, null));
     }
 
-    @RequestMapping(path = "/{name}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{name}", method = RequestMethod.DELETE)
     public void delete(@PathVariable String name) {
         kawasakiRobotService.deleteLocation(name);
     }
 
-    //TODO /locations (without / at the end) doesn't work
-    @RequestMapping(path = "/", method = RequestMethod.GET)
+    @RequestMapping(/*value = "/", */method = RequestMethod.GET)
     public List<String> getAllNames() {
         return kawasakiRobotService.getAllLocationNames();
     }
 
-    @RequestMapping(path = "/here", method = RequestMethod.GET)
+    @RequestMapping(value = "/here", method = RequestMethod.GET)
     Location toolCenterPoint() {
         return kawasakiRobotService.getToolCenterPoint();
     }
 
-    @RequestMapping(path = "/null", method = RequestMethod.GET)
+    @RequestMapping(value = "/null", method = RequestMethod.GET)
     Location nullLocation() {
         return new Location("null", new Transformation(0, 0, 0, 0, 0, 0), null);
     }

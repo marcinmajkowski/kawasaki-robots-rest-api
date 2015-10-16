@@ -1,8 +1,9 @@
-package com.marcinmajkowski.kawasakirobotsrestapi.service;
+package com.marcinmajkowski.robotics.kawasaki.rest.service;
 
 import org.apache.commons.net.telnet.InvalidTelnetOptionException;
 import org.apache.commons.net.telnet.TelnetClient;
 import org.apache.commons.net.telnet.TerminalTypeOptionHandler;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -10,7 +11,6 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 @Service
 public class KawasakiTelnetClientService {
@@ -19,9 +19,14 @@ public class KawasakiTelnetClientService {
     //TODO implement save/load
     //TODO add support for scientific notation (?)
 
-    private final String hostname;
-    private final int port;
-    private final String login;
+    @Value("${controller.hostname}")
+    private String hostname;
+
+    @Value("${controller.port}")
+    private int port;
+
+    @Value("${controller.login}")
+    private String login;
 
     private final TelnetClient telnetClient = new TelnetClient();
 
@@ -37,15 +42,15 @@ public class KawasakiTelnetClientService {
             e.printStackTrace();
         }
 
-        Properties configFile = new Properties();
-        try (InputStream stream = this.getClass().getClassLoader().getResourceAsStream("robot_connection.properties")) {
-            configFile.load(stream);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        hostname = configFile.getProperty("HOSTNAME");
-        port = Integer.parseInt(configFile.getProperty("PORT"));
-        login = configFile.getProperty("LOGIN");
+//        Properties configFile = new Properties();
+//        try (InputStream stream = this.getClass().getClassLoader().getResourceAsStream("robot_connection.properties")) {
+//            configFile.load(stream);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        hostname = configFile.getProperty("HOSTNAME");
+//        port = Integer.parseInt(configFile.getProperty("PORT"));
+//        login = configFile.getProperty("LOGIN");
     }
 
     public String getResponse(String command) {

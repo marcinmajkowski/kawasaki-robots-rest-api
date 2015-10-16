@@ -1,9 +1,9 @@
-package com.marcinmajkowski.kawasakirobotsrestapi.service;
+package com.marcinmajkowski.robotics.kawasaki.rest.service;
 
-import com.marcinmajkowski.kawasakirobotsrestapi.domain.JointDisplacement;
-import com.marcinmajkowski.kawasakirobotsrestapi.domain.Location;
-import com.marcinmajkowski.kawasakirobotsrestapi.domain.Transformation;
-import com.marcinmajkowski.robotics.kawasaki.TcpClient;
+import com.marcinmajkowski.robotics.kawasaki.client.tcp.TcpClient;
+import com.marcinmajkowski.robotics.kawasaki.rest.domain.JointDisplacement;
+import com.marcinmajkowski.robotics.kawasaki.rest.domain.Location;
+import com.marcinmajkowski.robotics.kawasaki.rest.domain.Transformation;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -11,9 +11,6 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 
-/**
- * Created by Marcin on 2015-08-20.
- */
 @Service
 public class KawasakiRobotService {
 

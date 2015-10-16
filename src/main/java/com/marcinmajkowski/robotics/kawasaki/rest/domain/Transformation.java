@@ -1,8 +1,5 @@
-package com.marcinmajkowski.kawasakirobotsrestapi.domain;
+package com.marcinmajkowski.robotics.kawasaki.rest.domain;
 
-/**
- * Created by Marcin on 2015-08-20.
- */
 public final class Transformation {
     private double x;
     private double y;

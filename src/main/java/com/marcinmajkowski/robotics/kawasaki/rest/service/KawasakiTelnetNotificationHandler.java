@@ -1,10 +1,7 @@
-package com.marcinmajkowski.kawasakirobotsrestapi.service;
+package com.marcinmajkowski.robotics.kawasaki.rest.service;
 
 import org.apache.commons.net.telnet.TelnetNotificationHandler;
 
-/**
- * Created by Marcin on 2015-08-20.
- */
 public class KawasakiTelnetNotificationHandler implements TelnetNotificationHandler {
     public void receivedNegotiation(int negotiation_code, int option_code) {
         String command = null;

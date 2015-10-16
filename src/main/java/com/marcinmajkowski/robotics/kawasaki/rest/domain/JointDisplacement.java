@@ -1,8 +1,5 @@
-package com.marcinmajkowski.kawasakirobotsrestapi.domain;
+package com.marcinmajkowski.robotics.kawasaki.rest.domain;
 
-/**
- * Created by Marcin on 2015-08-25.
- */
 public class JointDisplacement {
     private final double[] joints;
 

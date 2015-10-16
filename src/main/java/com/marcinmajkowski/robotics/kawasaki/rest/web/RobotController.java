@@ -1,6 +1,6 @@
-package com.marcinmajkowski.kawasakirobotsrestapi.web;
+package com.marcinmajkowski.robotics.kawasaki.rest.web;
 
-import com.marcinmajkowski.kawasakirobotsrestapi.service.KawasakiRobotService;
+import com.marcinmajkowski.robotics.kawasaki.rest.service.KawasakiRobotService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -34,7 +34,8 @@ public class RobotController {
 
     //TODO temporary
     @RequestMapping(value = "/load", method = RequestMethod.POST)
-    @ResponseBody String load(@RequestParam("file") MultipartFile file) {
+    @ResponseBody
+    String load(@RequestParam("file") MultipartFile file) {
         if (!file.isEmpty()) {
             try {
                 byte[] bytes = file.getBytes();
@@ -89,6 +90,6 @@ public class RobotController {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.TEXT_PLAIN);
         headers.add("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
-        return new ResponseEntity<String>(response, headers, HttpStatus.CREATED);
+        return new ResponseEntity<>(response, headers, HttpStatus.CREATED);
     }
 }
