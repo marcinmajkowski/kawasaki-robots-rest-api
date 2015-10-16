@@ -1,6 +1,8 @@
 package com.marcinmajkowski.robotics.kawasaki.rest.domain;
 
-public class Location /* Pose */ {
+import org.springframework.hateoas.ResourceSupport;
+
+public class Location /* Pose */ extends ResourceSupport {
     private final String name;
     private final Transformation transformation;
     private final JointDisplacement jointDisplacement;

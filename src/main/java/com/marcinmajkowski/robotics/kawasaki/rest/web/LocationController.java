@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+
 @RestController
 @RequestMapping("/locations")
 public class LocationController {
@@ -41,19 +44,23 @@ public class LocationController {
         kawasakiRobotService.deleteLocation(name);
     }
 
-    @RequestMapping(/*value = "/", */method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     public List<String> getAllNames() {
         return kawasakiRobotService.getAllLocationNames();
     }
 
     @RequestMapping(value = "/here", method = RequestMethod.GET)
     Location toolCenterPoint() {
-        return kawasakiRobotService.getToolCenterPoint();
+        Location location = kawasakiRobotService.getToolCenterPoint();
+        location.add(linkTo(methodOn(LocationController.class).toolCenterPoint()).withSelfRel());
+        return location;
     }
 
     @RequestMapping(value = "/null", method = RequestMethod.GET)
     Location nullLocation() {
-        return new Location("null", new Transformation(0, 0, 0, 0, 0, 0), null);
+        Location location = new Location("null", new Transformation(0, 0, 0, 0, 0, 0), null);
+        location.add(linkTo(methodOn(LocationController.class).nullLocation()).withSelfRel());
+        return location;
     }
 
     //TODO /tool
