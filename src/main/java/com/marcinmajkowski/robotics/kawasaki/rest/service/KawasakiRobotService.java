@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class KawasakiRobotService {
@@ -63,6 +65,48 @@ where
             e.printStackTrace();
         }
         return response;
+    }
+
+    public List<String> getAllRealNames() {
+        String response = null;
+        try {
+            response = tcpClient.getResponse("dir /r");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+/* Response:
+dir /r
+Real
+ p1        p2        p3        p4        p5        p6[]
+
+*/
+        //TODO NullPointerException
+        String[] tokens = response.split("\\s+");
+        List<String> result = Arrays.asList(tokens).subList(tokens.length > 3 ? 3 : tokens.length, tokens.length);
+
+        return result;
+    }
+
+    public Double getRealByName(String name) {
+        String response = null;
+        try {
+            response = tcpClient.getResponse("list /r " + name);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+/* Response: //TODO
+dir /r
+Real
+ p1        p2        p3        p4        p5        p6[]
+
+*/
+        String result = null;
+        Matcher matcher = Pattern.compile(name + " += +(\\d+(?:\\.\\d+)?)").matcher(response);
+        if (matcher.find()) {
+            result = matcher.group(1);
+        }
+        //TODO nullPointerException
+        return Double.parseDouble(result);
     }
 
     public enum SaveCommandArgument {
