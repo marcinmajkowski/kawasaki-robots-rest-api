@@ -3,7 +3,9 @@ package com.marcinmajkowski.robotics.kawasaki.rest.service;
 import com.marcinmajkowski.robotics.kawasaki.client.tcp.TcpClient;
 import com.marcinmajkowski.robotics.kawasaki.rest.domain.JointDisplacement;
 import com.marcinmajkowski.robotics.kawasaki.rest.domain.Location;
+import com.marcinmajkowski.robotics.kawasaki.rest.domain.Real;
 import com.marcinmajkowski.robotics.kawasaki.rest.domain.Transformation;
+import com.marcinmajkowski.robotics.kawasaki.rest.web.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -87,26 +89,34 @@ Real
         return result;
     }
 
-    public Double getRealByName(String name) {
+    public Real getRealByName(String name) throws ResourceNotFoundException {
         String response = null;
         try {
             response = tcpClient.getResponse("list /r " + name);
         } catch (IOException e) {
             e.printStackTrace();
         }
-/* Response: //TODO
-dir /r
+/* Response:
+list /r k
 Real
- p1        p2        p3        p4        p5        p6[]
+k        = 3
 
 */
-        String result = null;
-        Matcher matcher = Pattern.compile(name + " += +(\\d+(?:\\.\\d+)?)").matcher(response);
+        Real result = null;
+        Matcher matcher = Pattern.compile(Pattern.quote(name) + " += +(\\d+(?:\\.\\d+)?)").matcher(response);
         if (matcher.find()) {
-            result = matcher.group(1);
+            result = new Real(name, Double.parseDouble(matcher.group(1)));
+        } else {
+            matcher = Pattern.compile("\\((P\\d+)\\)(.*?)\\r?\\n").matcher(response);
+            if (!matcher.find()) {
+                //TODO refactor
+                throw new ResourceNotFoundException(null, null);
+            }
+            String code = matcher.group(1);
+            String description = matcher.group(2);
+            throw new ResourceNotFoundException(code, description);
         }
-        //TODO nullPointerException
-        return Double.parseDouble(result);
+        return result;
     }
 
     public enum SaveCommandArgument {

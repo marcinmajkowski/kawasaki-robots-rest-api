@@ -1,6 +1,7 @@
 package com.marcinmajkowski.robotics.kawasaki.rest.web;
 
 import com.marcinmajkowski.robotics.kawasaki.rest.domain.Name;
+import com.marcinmajkowski.robotics.kawasaki.rest.domain.Real;
 import com.marcinmajkowski.robotics.kawasaki.rest.service.KawasakiRobotService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping(value = "/reals")
@@ -36,9 +38,11 @@ public class RealController {
     }
 
     @RequestMapping(value = "/{name}", method = RequestMethod.GET)
-    public Double getByName(@PathVariable String name) {
+    public Real getByName(@PathVariable String name) throws ResourceNotFoundException {
         //TODO handle arrays
-        return kawasakiRobotService.getRealByName(name);
+        Real real = kawasakiRobotService.getRealByName(name);
+        real.add(linkTo(methodOn(RealController.class).getByName(name)).withSelfRel());
+        return real;
     }
 
     //TODO
