@@ -1,9 +1,22 @@
 package com.marcinmajkowski.robotics.kawasaki.rest.web;
 
-import com.marcinmajkowski.robotics.kawasaki.rest.service.RobotControllerException;
+public class ResourceNotFoundException extends Exception {
+    public ResourceNotFoundException() {
+    }
 
-public class ResourceNotFoundException extends RobotControllerException {
-    public ResourceNotFoundException(String code, String description) {
-        super(code, description);
+    public ResourceNotFoundException(String message) {
+        super(message);
+    }
+
+    public ResourceNotFoundException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public ResourceNotFoundException(Throwable cause) {
+        super(cause);
+    }
+
+    public ResourceNotFoundException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
     }
 }

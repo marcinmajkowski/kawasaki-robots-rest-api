@@ -107,14 +107,12 @@ k        = 3
         if (matcher.find()) {
             result = new Real(name, Double.parseDouble(matcher.group(1)));
         } else {
-            matcher = Pattern.compile("\\((P\\d+)\\)(.*?)\\r?\\n").matcher(response);
+            matcher = Pattern.compile("(\\(P\\d+\\).*?)\\r?\\n").matcher(response);
             if (!matcher.find()) {
-                //TODO refactor
-                throw new ResourceNotFoundException(null, null);
+                throw new ResourceNotFoundException();
             }
-            String code = matcher.group(1);
-            String description = matcher.group(2);
-            throw new ResourceNotFoundException(code, description);
+            String message = matcher.group(1);
+            throw new ResourceNotFoundException(message);
         }
         return result;
     }
