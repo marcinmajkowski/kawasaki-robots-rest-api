@@ -2,10 +2,10 @@ package com.marcinmajkowski.robotics.kawasaki.rest.domain;
 
 public class ErrorInfo {
     public final String url;
-    public final String ex;
+    public final String message;
 
-    public ErrorInfo(String url, Exception ex) {
+    public ErrorInfo(String url, Exception exception) {
         this.url = url;
-        this.ex = ex.getLocalizedMessage();
+        this.message = exception.getLocalizedMessage();
     }
 }

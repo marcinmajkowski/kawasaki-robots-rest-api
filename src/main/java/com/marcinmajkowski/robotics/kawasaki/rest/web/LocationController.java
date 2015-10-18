@@ -1,6 +1,6 @@
 package com.marcinmajkowski.robotics.kawasaki.rest.web;
 
-import com.marcinmajkowski.robotics.kawasaki.rest.domain.Location;
+import com.marcinmajkowski.robotics.kawasaki.rest.domain.LocationVariable;
 import com.marcinmajkowski.robotics.kawasaki.rest.domain.Transformation;
 import com.marcinmajkowski.robotics.kawasaki.rest.service.KawasakiRobotService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class LocationController {
     }
 
     @RequestMapping(value = "/{name}", method = RequestMethod.GET)
-    public Location getByName(@PathVariable String name) {
+    public LocationVariable getByName(@PathVariable String name) {
         //TODO handle arrays
         return kawasakiRobotService.getLocationByName(name);
     }
@@ -36,7 +36,7 @@ public class LocationController {
                     @PathVariable String name) {
         //TODO handle arrays
         //TODO different result codes for different results
-        kawasakiRobotService.addLocation(new Location(name, transformation, null));
+        kawasakiRobotService.addLocation(new LocationVariable(name, transformation, null));
     }
 
     @RequestMapping(value = "/{name}", method = RequestMethod.DELETE)
@@ -50,17 +50,17 @@ public class LocationController {
     }
 
     @RequestMapping(value = "/here", method = RequestMethod.GET)
-    Location toolCenterPoint() {
-        Location location = kawasakiRobotService.getToolCenterPoint();
-        location.add(linkTo(methodOn(LocationController.class).toolCenterPoint()).withSelfRel());
-        return location;
+    LocationVariable toolCenterPoint() {
+        LocationVariable locationVariable = kawasakiRobotService.getToolCenterPoint();
+        locationVariable.add(linkTo(methodOn(LocationController.class).toolCenterPoint()).withSelfRel());
+        return locationVariable;
     }
 
     @RequestMapping(value = "/null", method = RequestMethod.GET)
-    Location nullLocation() {
-        Location location = new Location("null", new Transformation(0, 0, 0, 0, 0, 0), null);
-        location.add(linkTo(methodOn(LocationController.class).nullLocation()).withSelfRel());
-        return location;
+    LocationVariable nullLocation() {
+        LocationVariable locationVariable = new LocationVariable("null", new Transformation(0, 0, 0, 0, 0, 0), null);
+        locationVariable.add(linkTo(methodOn(LocationController.class).nullLocation()).withSelfRel());
+        return locationVariable;
     }
 
     //TODO /tool
