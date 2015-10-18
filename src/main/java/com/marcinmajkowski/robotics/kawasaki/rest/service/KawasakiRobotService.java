@@ -2,10 +2,11 @@ package com.marcinmajkowski.robotics.kawasaki.rest.service;
 
 import com.marcinmajkowski.robotics.kawasaki.client.tcp.TcpClient;
 import com.marcinmajkowski.robotics.kawasaki.rest.domain.JointDisplacement;
-import com.marcinmajkowski.robotics.kawasaki.rest.domain.Location;
-import com.marcinmajkowski.robotics.kawasaki.rest.domain.Real;
+import com.marcinmajkowski.robotics.kawasaki.rest.domain.LocationVariable;
+import com.marcinmajkowski.robotics.kawasaki.rest.domain.RealVariable;
 import com.marcinmajkowski.robotics.kawasaki.rest.domain.Transformation;
 import com.marcinmajkowski.robotics.kawasaki.rest.web.ResourceNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -17,16 +18,19 @@ import java.util.regex.Pattern;
 
 @Service
 public class KawasakiRobotService {
+    private final TcpClient tcpClient;
 
-    //TODO load ip from properties file
-    private final TcpClient tcpClient = new TcpClient("192.168.56.1");
+    @Autowired
+    public KawasakiRobotService(TcpClient tcpClient) {
+        this.tcpClient = tcpClient;
+    }
 
     public String getModel() {
         //TODO
         return "RS005L";
     }
 
-    public Location getToolCenterPoint() {
+    public LocationVariable getToolCenterPoint() {
         String response = null;
         try {
             response = tcpClient.getResponse("where");
@@ -56,7 +60,7 @@ where
             joints[i] = Double.parseDouble(tokens[7 + i]);
         }
         JointDisplacement jointDisplacement = new JointDisplacement(joints);
-        return new Location("here", transformation, jointDisplacement);
+        return new LocationVariable("here", transformation, jointDisplacement);
     }
 
     public String getStatus() {
@@ -89,7 +93,7 @@ Real
         return result;
     }
 
-    public Real getRealByName(String name) throws ResourceNotFoundException {
+    public RealVariable getRealByName(String name) throws ResourceNotFoundException {
         String response = null;
         try {
             response = tcpClient.getResponse("list /r " + name);
@@ -102,10 +106,10 @@ Real
 k        = 3
 
 */
-        Real result = null;
+        RealVariable result = null;
         Matcher matcher = Pattern.compile(Pattern.quote(name) + " += +(\\d+(?:\\.\\d+)?)").matcher(response);
         if (matcher.find()) {
-            result = new Real(name, Double.parseDouble(matcher.group(1)));
+            result = new RealVariable(name, Double.parseDouble(matcher.group(1)));
         } else {
             matcher = Pattern.compile("(\\(P\\d+\\).*?)\\r?\\n").matcher(response);
             if (!matcher.find()) {
@@ -187,7 +191,7 @@ Location
         }
     }
 
-    public Location getLocationByName(String name) {
+    public LocationVariable getLocationByName(String name) {
         //TODO
         String response = null;
         try {
@@ -231,12 +235,12 @@ p12:Variable (or program) does not exist.
         double t = Double.parseDouble(tokens[6]);
         Transformation transformation = new Transformation(x, y, z, o, a, t);
 
-        return new Location(tokens[0], transformation, null);
+        return new LocationVariable(tokens[0], transformation, null);
     }
 
-    public void addLocation(Location location) {
-        Transformation transformation = location.getTransformation();
-        String name = location.getName();
+    public void addLocation(LocationVariable locationVariable) {
+        Transformation transformation = locationVariable.getTransformation();
+        String name = locationVariable.getName();
         double x = transformation.getX();
         double y = transformation.getY();
         double z = transformation.getZ();

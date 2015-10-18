@@ -21,23 +21,15 @@ public class TcpClient {
     //TODO implement save/load
     //TODO add support for scientific notation (?)
 
+    //TODO synchronization
+
     private final String hostname;
+
     private final int port;
+
     private final String login;
 
     private final TelnetClient telnetClient = new TelnetClient();
-
-    public TcpClient() {
-        this("localhost");
-    }
-
-    public TcpClient(String hostname) {
-        this(hostname, 9105);
-    }
-
-    public TcpClient(String hostname, int port) {
-        this(hostname, port, "as");
-    }
 
     public TcpClient(String hostname, int port, String login) {
         this.hostname = hostname;
