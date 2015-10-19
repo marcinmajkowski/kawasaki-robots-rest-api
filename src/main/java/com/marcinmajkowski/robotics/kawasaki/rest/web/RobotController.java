@@ -1,6 +1,6 @@
 package com.marcinmajkowski.robotics.kawasaki.rest.web;
 
-import com.marcinmajkowski.robotics.kawasaki.rest.service.KawasakiRobotService;
+import com.marcinmajkowski.robotics.kawasaki.rest.service.RobotService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -20,16 +20,16 @@ import java.util.Set;
 @RestController
 public class RobotController {
 
-    private final KawasakiRobotService kawasakiRobotService;
+    private final RobotService robotService;
 
     @Autowired
-    public RobotController(KawasakiRobotService kawasakiRobotService) {
-        this.kawasakiRobotService = kawasakiRobotService;
+    public RobotController(RobotService robotService) {
+        this.robotService = robotService;
     }
 
     @RequestMapping("/status")
     String status() {
-        return kawasakiRobotService.getStatus();
+        return robotService.getStatus();
     }
 
     //TODO temporary
@@ -42,7 +42,7 @@ public class RobotController {
                 BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(new File("temp")));
                 stream.write(bytes);
                 stream.close();
-                kawasakiRobotService.load("temp");
+                robotService.load("temp");
                 return "You successfully uploaded file!";
             } catch (IOException e) {
                 return "You failed to upload file - " + e.getMessage();
@@ -55,38 +55,38 @@ public class RobotController {
     ResponseEntity<String> data(@PathVariable("fileName") String fileName,
                                 @RequestParam(value = "only", required = false) String only) {
         String[] types = (only != null ? only : "").split(",");
-        Set<KawasakiRobotService.SaveCommandArgument> arguments = new HashSet<>();
+        Set<RobotService.SaveCommandArgument> arguments = new HashSet<>();
         for (String type : types) {
             switch (type.toLowerCase()) {
                 case "programs":
-                    arguments.add(KawasakiRobotService.SaveCommandArgument.PROGRAMS);
+                    arguments.add(RobotService.SaveCommandArgument.PROGRAMS);
                     break;
                 case "locations":
-                    arguments.add(KawasakiRobotService.SaveCommandArgument.LOCATIONS);
+                    arguments.add(RobotService.SaveCommandArgument.LOCATIONS);
                     break;
                 case "reals":
-                    arguments.add(KawasakiRobotService.SaveCommandArgument.REALS);
+                    arguments.add(RobotService.SaveCommandArgument.REALS);
                     break;
                 case "strings":
-                    arguments.add(KawasakiRobotService.SaveCommandArgument.STRINGS);
+                    arguments.add(RobotService.SaveCommandArgument.STRINGS);
                     break;
                 case "auxiliary-information":
-                    arguments.add(KawasakiRobotService.SaveCommandArgument.AUXILIARY_INFORMATION);
+                    arguments.add(RobotService.SaveCommandArgument.AUXILIARY_INFORMATION);
                     break;
                 case "system-data":
-                    arguments.add(KawasakiRobotService.SaveCommandArgument.SYSTEM_DATA);
+                    arguments.add(RobotService.SaveCommandArgument.SYSTEM_DATA);
                     break;
                 case "robot-data":
-                    arguments.add(KawasakiRobotService.SaveCommandArgument.ROBOT_DATA);
+                    arguments.add(RobotService.SaveCommandArgument.ROBOT_DATA);
                     break;
                 case "error-log-data":
-                    arguments.add(KawasakiRobotService.SaveCommandArgument.ERROR_LOG_DATA);
+                    arguments.add(RobotService.SaveCommandArgument.ERROR_LOG_DATA);
                     break;
             }
         }
-        String response = kawasakiRobotService.getData(arguments.size() > 0 ?
+        String response = robotService.getData(arguments.size() > 0 ?
                 EnumSet.copyOf(arguments) :
-                EnumSet.noneOf(KawasakiRobotService.SaveCommandArgument.class));
+                EnumSet.noneOf(RobotService.SaveCommandArgument.class));
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.TEXT_PLAIN);
         headers.add("Content-Disposition", "attachment; filename=\"" + fileName + "\"");

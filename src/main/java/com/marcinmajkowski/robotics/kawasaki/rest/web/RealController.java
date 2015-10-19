@@ -2,7 +2,7 @@ package com.marcinmajkowski.robotics.kawasaki.rest.web;
 
 import com.marcinmajkowski.robotics.kawasaki.rest.domain.Name;
 import com.marcinmajkowski.robotics.kawasaki.rest.domain.RealVariable;
-import com.marcinmajkowski.robotics.kawasaki.rest.service.KawasakiRobotService;
+import com.marcinmajkowski.robotics.kawasaki.rest.service.RealService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,18 +16,20 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
-@RequestMapping(value = "/reals")
+@RequestMapping("/reals")
 public class RealController {
-    private final KawasakiRobotService kawasakiRobotService;
+    private final RealService realService;
+    //TODO nolink
+    //TODO embedded
 
     @Autowired
-    public RealController(KawasakiRobotService kawasakiRobotService) {
-        this.kawasakiRobotService = kawasakiRobotService;
+    public RealController(RealService realService) {
+        this.realService = realService;
     }
 
     @RequestMapping(method = RequestMethod.GET)
     public List<Name> getAllNames() {
-        List<String> realNames = kawasakiRobotService.getAllRealNames();
+        List<String> realNames = realService.getAllRealNames();
         List<Name> results = new ArrayList<>(realNames.size());
         for (String realName : realNames) {
             Name name = new Name(realName);
@@ -40,7 +42,7 @@ public class RealController {
     @RequestMapping(value = "/{name}", method = RequestMethod.GET)
     public RealVariable getByName(@PathVariable String name) throws ResourceNotFoundException {
         //TODO handle arrays
-        RealVariable realVariable = kawasakiRobotService.getRealByName(name);
+        RealVariable realVariable = realService.getRealByName(name);
         realVariable.add(linkTo(methodOn(RealController.class).getByName(name)).withSelfRel());
         return realVariable;
     }
