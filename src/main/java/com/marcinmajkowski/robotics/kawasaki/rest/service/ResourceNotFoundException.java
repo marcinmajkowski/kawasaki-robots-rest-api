@@ -1,4 +1,4 @@
-package com.marcinmajkowski.robotics.kawasaki.rest.web;
+package com.marcinmajkowski.robotics.kawasaki.rest.service;
 
 public class ResourceNotFoundException extends Exception {
     public ResourceNotFoundException() {

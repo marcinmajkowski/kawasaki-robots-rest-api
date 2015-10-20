@@ -3,6 +3,7 @@ package com.marcinmajkowski.robotics.kawasaki.rest.web;
 import com.marcinmajkowski.robotics.kawasaki.rest.domain.Name;
 import com.marcinmajkowski.robotics.kawasaki.rest.domain.RealVariable;
 import com.marcinmajkowski.robotics.kawasaki.rest.service.RealService;
+import com.marcinmajkowski.robotics.kawasaki.rest.service.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;

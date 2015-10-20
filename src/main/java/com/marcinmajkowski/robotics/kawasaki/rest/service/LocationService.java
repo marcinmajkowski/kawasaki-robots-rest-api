@@ -35,7 +35,7 @@ public class LocationService {
              0.000     0.000    80.000     0.000     0.000     0.000
 
         */
-        //TODO NullPointerException
+        //FIXME NullPointerException
         String[] tokens = response.split("\\s+");
         double x = Double.parseDouble(tokens[19]);
         double y = Double.parseDouble(tokens[20]);
@@ -44,7 +44,7 @@ public class LocationService {
         double a = Double.parseDouble(tokens[23]);
         double t = Double.parseDouble(tokens[24]);
         Transformation transformation = new Transformation(x, y, z, o, a, t);
-        //TODO following will work correctly only if the robot has exactly 6 axis
+        //FIXME following will work correctly only if the robot has exactly 6 axis
         double[] joints = new double[6];
         for (int i = 0; i < joints.length; i++) {
             joints[i] = Double.parseDouble(tokens[7 + i]);
@@ -53,7 +53,7 @@ public class LocationService {
         return new LocationVariable("here", transformation, jointDisplacement);
     }
 
-    public List<String> getAllLocationNames() {
+    public List<String> getAllNames() {
         String response = null;
         try {
             response = tcpClient.getResponse("dir /l");
@@ -73,7 +73,7 @@ public class LocationService {
         return result;
     }
 
-    public LocationVariable getLocationByName(String name) {
+    public LocationVariable get(String name) {
         //TODO
         String response = null;
         try {
@@ -120,9 +120,10 @@ public class LocationService {
         return new LocationVariable(tokens[0], transformation, null);
     }
 
-    public void addLocation(LocationVariable locationVariable) {
-        Transformation transformation = locationVariable.getTransformation();
+    public LocationVariable add(LocationVariable locationVariable) {
         String name = locationVariable.getName();
+        LocationVariable previousValue = get(name);
+        Transformation transformation = locationVariable.getTransformation();
         double x = transformation.getX();
         double y = transformation.getY();
         double z = transformation.getZ();
@@ -144,9 +145,11 @@ public class LocationService {
 
 
         */
+        return previousValue;
     }
 
-    public void deleteLocation(String name) {
+    public LocationVariable remove(String name) {
+        LocationVariable previousValue = get(name);
         //TODO prevent injecting malicious command
         String command = "delete /l " + name + "\r\n" + "1";
         try {
@@ -159,5 +162,6 @@ public class LocationService {
         Are you sure ? (Yes:1, No:0) 1
 
         */
+        return previousValue;
     }
 }

@@ -2,7 +2,6 @@ package com.marcinmajkowski.robotics.kawasaki.rest.service;
 
 import com.marcinmajkowski.robotics.kawasaki.client.tcp.TcpClient;
 import com.marcinmajkowski.robotics.kawasaki.rest.domain.RealVariable;
-import com.marcinmajkowski.robotics.kawasaki.rest.web.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

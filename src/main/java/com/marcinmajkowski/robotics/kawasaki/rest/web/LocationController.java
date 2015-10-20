@@ -3,7 +3,10 @@ package com.marcinmajkowski.robotics.kawasaki.rest.web;
 import com.marcinmajkowski.robotics.kawasaki.rest.domain.LocationVariable;
 import com.marcinmajkowski.robotics.kawasaki.rest.domain.Transformation;
 import com.marcinmajkowski.robotics.kawasaki.rest.service.LocationService;
+import com.marcinmajkowski.robotics.kawasaki.rest.service.ResourceNotFoundException;
+import com.marcinmajkowski.robotics.kawasaki.rest.service.UnknownRobotResponseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,27 +29,32 @@ public class LocationController {
     }
 
     @RequestMapping(value = "/{name}", method = RequestMethod.GET)
-    public LocationVariable getByName(@PathVariable String name) {
+    public LocationVariable getByName(@PathVariable String name) throws ResourceNotFoundException, UnknownRobotResponseException {
         //TODO handle arrays
-        return locationService.getLocationByName(name);
+        LocationVariable location = locationService.get(name);
+        if (location == null) {
+            throw new ResourceNotFoundException();
+        }
+        return location;
     }
 
-    @RequestMapping(value = "/{name}", method = RequestMethod.POST, consumes = "application/json")
+    @RequestMapping(value = "/{name}", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
     public void add(@RequestBody Transformation transformation,
                     @PathVariable String name) {
         //TODO handle arrays
         //TODO different result codes for different results
-        locationService.addLocation(new LocationVariable(name, transformation, null));
+        locationService.add(new LocationVariable(name, transformation, null));
     }
 
     @RequestMapping(value = "/{name}", method = RequestMethod.DELETE)
     public void delete(@PathVariable String name) {
-        locationService.deleteLocation(name);
+        locationService.remove(name);
     }
 
     @RequestMapping(method = RequestMethod.GET)
     public List<String> getAllNames() {
-        return locationService.getAllLocationNames();
+        return locationService.getAllNames();
     }
 
     @RequestMapping(value = "/here", method = RequestMethod.GET)
