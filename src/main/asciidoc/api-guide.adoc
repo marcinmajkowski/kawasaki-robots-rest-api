@@ -1,4 +1,4 @@
-= KawasAPI Guide
+= KawasAPI
 Marcin Majkowski;
 :doctype: book
 :icons: font
