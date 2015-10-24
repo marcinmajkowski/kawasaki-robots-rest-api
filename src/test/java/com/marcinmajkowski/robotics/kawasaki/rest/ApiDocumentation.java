@@ -1,5 +1,6 @@
 package com.marcinmajkowski.robotics.kawasaki.rest;
 
+import com.marcinmajkowski.robotics.kawasaki.rest.domain.RealVariable;
 import com.marcinmajkowski.robotics.kawasaki.rest.service.LocationService;
 import com.marcinmajkowski.robotics.kawasaki.rest.service.RealService;
 import com.marcinmajkowski.robotics.kawasaki.rest.service.RobotService;
@@ -17,8 +18,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
@@ -64,9 +65,12 @@ public class ApiDocumentation {
 
     @Test
     public void doublesSetExample() throws Exception {
-        List<String> expectedNames = Arrays.asList("jeden", "dwa");
+        Set<RealVariable> expectedResults = new HashSet<>();
+        expectedResults.add(new RealVariable("half", 0.5));
+        expectedResults.add(new RealVariable("one", 1.0));
+        expectedResults.add(new RealVariable("two", 2.0));
 
-        when(realServiceMock.getAllRealNames()).thenReturn(expectedNames);
+        when(realServiceMock.getAll()).thenReturn(expectedResults);
 
         this.mockMvc.perform(get("/reals"))
                 .andExpect(status().isOk())
