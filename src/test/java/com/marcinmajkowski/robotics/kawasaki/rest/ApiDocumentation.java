@@ -1,5 +1,9 @@
 package com.marcinmajkowski.robotics.kawasaki.rest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.marcinmajkowski.robotics.kawasaki.rest.domain.Instruction;
+import com.marcinmajkowski.robotics.kawasaki.rest.domain.InstructionParameter;
 import com.marcinmajkowski.robotics.kawasaki.rest.domain.RealVariable;
 import com.marcinmajkowski.robotics.kawasaki.rest.service.LocationService;
 import com.marcinmajkowski.robotics.kawasaki.rest.service.RealService;
@@ -11,6 +15,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentation;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -26,6 +31,9 @@ import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -75,5 +83,38 @@ public class ApiDocumentation {
         this.mockMvc.perform(get("/reals"))
                 .andExpect(status().isOk())
                 .andDo(document("reals"));
+    }
+
+    @Test
+    public void robotInstruction() throws Exception {
+        InstructionParameter parameter = new InstructionParameter();
+        parameter.setJointNumber(1);
+        parameter.setDisplacement(45.0);
+        parameter.setSpeed(100.0);
+
+        Instruction instruction = new Instruction();
+        instruction.setKeyword("drive");
+        instruction.setParameter(parameter);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+        String instructionJson = objectMapper.writeValueAsString(instruction);
+
+        this.mockMvc.perform(
+                post("/robots/1/instructions")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(instructionJson)
+        ).andExpect(
+                status()
+                        .isOk()
+        ).andDo(document("resources-robot-instruction",
+                        responseFields(
+                                fieldWithPath("keyword").description("keyword descritpion"),
+                                fieldWithPath("parameter.jointNumber").description("jointNumber"),
+                                fieldWithPath("parameter.displacement").description("displacement"),
+                                fieldWithPath("parameter.speed").description("speed")
+                        )
+                )
+        );
     }
 }

@@ -142,7 +142,7 @@
                 <version>0.12</version>
                 <configuration>
                     <message>Creating site for ${project.version}</message>
-                    <server>github</server>
+                    <!--<server>github</server>-->
                     <repositoryName>kawasaki-robots-rest-api</repositoryName>
                     <repositoryOwner>marcinmajkowski</repositoryOwner>
                     <outputDirectory>
