@@ -7,6 +7,7 @@
     <artifactId>kawasaki-robots-rest-api</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
+    <url>https://github.com/marcinmajkowski/kawasaki-robots-rest-api</url>
 
     <name>Kawasaki robots REST API</name>
     <description>Kawasaki robots REST API</description>
@@ -15,13 +16,15 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>1.2.6.RELEASE</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath/>
+        <!-- lookup parent from repository -->
     </parent>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
         <snippetsDirectory>${project.build.directory}/generated-snippets</snippetsDirectory>
+        <github.global.server>github</github.global.server>
     </properties>
 
     <dependencies>
@@ -130,6 +133,29 @@
                                 </resource>
                             </resources>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.github.github</groupId>
+                <artifactId>site-maven-plugin</artifactId>
+                <version>0.12</version>
+                <configuration>
+                    <message>Creating site for ${project.version}</message>
+                    <server>github</server>
+                    <repositoryName>kawasaki-robots-rest-api</repositoryName>
+                    <repositoryOwner>marcinmajkowski</repositoryOwner>
+                    <outputDirectory>
+                        ${project.build.outputDirectory}/static/docs
+                    </outputDirectory>
+                    <merge>true</merge>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>site</goal>
+                        </goals>
+                        <phase>site</phase>
                     </execution>
                 </executions>
             </plugin>
