@@ -1,11 +1,14 @@
 package com.marcinmajkowski.robotics.kawasaki.rest.service;
 
 import com.marcinmajkowski.robotics.kawasaki.client.tcp.TcpClient;
+import com.marcinmajkowski.robotics.kawasaki.rest.domain.Robot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.List;
 
 @Service
 public class RobotService {
@@ -29,6 +32,26 @@ public class RobotService {
             e.printStackTrace();
         }
         return response;
+    }
+
+    public List<Robot> getAll() {
+        //TODO
+        List<Robot> results = new ArrayList<>();
+        Robot robot = new Robot();
+        robot.setId(1);
+        results.add(robot);
+        return results;
+    }
+
+    public Robot get(int id) {
+        //TODO
+        if (id == 1) {
+            Robot robot = new Robot();
+            robot.setId(id);
+            return robot;
+        } else {
+            return null;
+        }
     }
 
     public enum SaveCommandArgument {

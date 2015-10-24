@@ -1,5 +1,6 @@
 package com.marcinmajkowski.robotics.kawasaki.rest.web;
 
+import com.marcinmajkowski.robotics.kawasaki.rest.domain.Robot;
 import com.marcinmajkowski.robotics.kawasaki.rest.service.RobotService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -13,12 +14,13 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URI;
-import java.util.*;
-
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @RestController
+@RequestMapping("/robots")
 public class RobotController {
 
     private final RobotService robotService;
@@ -28,25 +30,37 @@ public class RobotController {
         this.robotService = robotService;
     }
 
+//    @RequestMapping("/")
+//    Map<String, URI> root() {
+//        HashMap<String, URI> resources = new HashMap<>();
+//        resources.put("programs", linkTo(ProgramController.class).toUri());
+//        resources.put("locations", linkTo(LocationController.class).toUri());
+//        resources.put("reals", linkTo(RealController.class).toUri());
+//        resources.put("strings", linkTo(StringController.class).toUri());
+//        return resources;
+//    }
+
     @RequestMapping
-    Map<String, URI> root() {
-        HashMap<String, URI> resources = new HashMap<>();
-        resources.put("programs", linkTo(ProgramController.class).toUri());
-        resources.put("locations", linkTo(LocationController.class).toUri());
-        resources.put("reals", linkTo(RealController.class).toUri());
-        resources.put("strings", linkTo(StringController.class).toUri());
-        return resources;
+    List<Robot> all() {
+        return robotService.getAll();
     }
 
-    @RequestMapping("/status")
-    String status() {
+    @RequestMapping("/{id}")
+    Robot get(@PathVariable int id) {
+        return robotService.get(id);
+    }
+
+    @RequestMapping("/{id}/status")
+    String status(@PathVariable int id) {
+        //TODO handle id
         return robotService.getStatus();
     }
 
     //TODO temporary
-    @RequestMapping(value = "/load", method = RequestMethod.POST)
+    @RequestMapping(value = "/{id}/load", method = RequestMethod.POST)
     @ResponseBody
-    String load(@RequestParam("file") MultipartFile file) {
+    String load(@PathVariable int id, @RequestParam("file") MultipartFile file) {
+        //TODO handle id
         if (!file.isEmpty()) {
             try {
                 byte[] bytes = file.getBytes();
@@ -62,9 +76,11 @@ public class RobotController {
         return "Empty file";
     }
 
-    @RequestMapping(value = "/data/{fileName:.+}", method = RequestMethod.GET)
-    ResponseEntity<String> data(@PathVariable("fileName") String fileName,
+    @RequestMapping(value = "/{id}/data/{fileName:.+}", method = RequestMethod.GET)
+    ResponseEntity<String> data(@PathVariable int id,
+                                @PathVariable("fileName") String fileName,
                                 @RequestParam(value = "only", required = false) String only) {
+        //TODO handle id
         String[] types = (only != null ? only : "").split(",");
         Set<RobotService.SaveCommandArgument> arguments = new HashSet<>();
         for (String type : types) {
