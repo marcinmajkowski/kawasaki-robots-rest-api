@@ -13,9 +13,10 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.EnumSet;
-import java.util.HashSet;
-import java.util.Set;
+import java.net.URI;
+import java.util.*;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 @RestController
 public class RobotController {
@@ -25,6 +26,16 @@ public class RobotController {
     @Autowired
     public RobotController(RobotService robotService) {
         this.robotService = robotService;
+    }
+
+    @RequestMapping
+    Map<String, URI> root() {
+        HashMap<String, URI> resources = new HashMap<>();
+        resources.put("programs", linkTo(ProgramController.class).toUri());
+        resources.put("locations", linkTo(LocationController.class).toUri());
+        resources.put("reals", linkTo(RealController.class).toUri());
+        resources.put("strings", linkTo(StringController.class).toUri());
+        return resources;
     }
 
     @RequestMapping("/status")
