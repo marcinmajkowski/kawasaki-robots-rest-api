@@ -86,7 +86,7 @@ public class ApiDocumentation {
     }
 
     @Test
-    public void robotInstruction() throws Exception {
+    public void driveInstruction() throws Exception {
         InstructionParameter parameter = new InstructionParameter();
         parameter.setJointNumber(1);
         parameter.setDisplacement(45.0);
@@ -107,7 +107,7 @@ public class ApiDocumentation {
         ).andExpect(
                 status()
                         .isOk()
-        ).andDo(document("resources-robot-instruction",
+        ).andDo(document("drive-instruction",
                         responseFields(
                                 fieldWithPath("keyword").description("keyword descritpion"),
                                 fieldWithPath("parameter.jointNumber").description("jointNumber"),
