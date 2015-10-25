@@ -67,4 +67,15 @@ public final class Transformation {
     public void setT(double t) {
         this.t = t;
     }
+
+    public String toInstructionParameter() {
+        StringBuilder result = new StringBuilder("trans(");
+        result.append(x).append(", ");
+        result.append(y).append(", ");
+        result.append(z).append(", ");
+        result.append(o).append(", ");
+        result.append(a).append(", ");
+        result.append(t).append(")");
+        return result.toString();
+    }
 }
