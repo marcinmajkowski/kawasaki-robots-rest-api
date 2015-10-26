@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static java.util.Objects.nonNull;
 import static java.util.Objects.requireNonNull;
@@ -21,13 +23,15 @@ public class InstructionService {
         this.tcpClient = tcpClient;
     }
 
-    public void drive(Integer jointNumber, Double displacement, Double speed) {
+    public void drive(Integer jointNumber, Double displacement, Double speed) throws IOException, UnknownRobotResponseException {
         requireNonNull(jointNumber);
         requireNonNull(displacement);
-        try {
-            tcpClient.getResponse("do drive " + jointNumber + ", " + displacement + (speed != null ? ", " + speed : ""));
-        } catch (IOException e) {
-            e.printStackTrace();
+        String command = "do drive " + jointNumber + ", " + displacement + (speed != null ? ", " + speed : "");
+        String response = tcpClient.getResponse(command);
+        Pattern pattern = Pattern.compile(Pattern.quote(command) + "\\s*", Pattern.DOTALL);
+        Matcher matcher = pattern.matcher(response);
+        if (!matcher.matches()) {
+            throw new UnknownRobotResponseException();
         }
     }
 

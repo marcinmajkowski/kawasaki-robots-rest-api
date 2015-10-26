@@ -2,8 +2,11 @@ package com.marcinmajkowski.robotics.kawasaki.rest.web;
 
 import com.marcinmajkowski.robotics.kawasaki.rest.domain.*;
 import com.marcinmajkowski.robotics.kawasaki.rest.service.InstructionService;
+import com.marcinmajkowski.robotics.kawasaki.rest.service.UnknownRobotResponseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -19,7 +22,7 @@ public class InstructionController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public Instruction execute(@PathVariable int id, @RequestBody Instruction instruction) {
+    public Instruction execute(@PathVariable int id, @RequestBody Instruction instruction) throws IOException, UnknownRobotResponseException {
         InstructionParameter parameter = instruction.getParameter();
         String keyword = instruction.getKeyword();
         if (isNull(keyword)) {
