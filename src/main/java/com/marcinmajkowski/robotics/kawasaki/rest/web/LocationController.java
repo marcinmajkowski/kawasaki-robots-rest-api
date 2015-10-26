@@ -1,5 +1,6 @@
 package com.marcinmajkowski.robotics.kawasaki.rest.web;
 
+import com.marcinmajkowski.robotics.kawasaki.rest.domain.JointDisplacement;
 import com.marcinmajkowski.robotics.kawasaki.rest.domain.LocationVariable;
 import com.marcinmajkowski.robotics.kawasaki.rest.domain.Transformation;
 import com.marcinmajkowski.robotics.kawasaki.rest.service.LocationService;
@@ -11,11 +12,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static java.util.Objects.nonNull;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
-@RequestMapping("/locations")
+@RequestMapping("/robots/{id}/locations")
 public class LocationController {
     //TODO multidimensional arrays
     //TODO store current pose in new variable (here pose vs. here #pose !)
@@ -38,13 +40,24 @@ public class LocationController {
         return location;
     }
 
-    @RequestMapping(value = "/{name}", method = RequestMethod.POST)
+    @RequestMapping(value = "/{name}", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.CREATED)
-    public void add(@RequestBody Transformation transformation,
-                    @PathVariable String name) {
+    public LocationVariable put(@RequestBody LocationVariable location,
+                                @PathVariable String name) {
+        if (nonNull(location.getJointDisplacement()) && nonNull(location.getTransformation())) {
+            throw new RuntimeException("umbiguity");
+        }
+
+        if (nonNull(location.getJointDisplacement())) {
+            JointDisplacement jointDisplacement = location.getJointDisplacement();
+            return locationService.put(name, jointDisplacement);
+        } else if (nonNull(location.getTransformation())) {
+            Transformation transformation = location.getTransformation();
+            return locationService.put(name, transformation);
+        }
         //TODO handle arrays
         //TODO different result codes for different results
-        locationService.add(new LocationVariable(name, transformation, null));
+        return null;
     }
 
     @RequestMapping(value = "/{name}", method = RequestMethod.DELETE)

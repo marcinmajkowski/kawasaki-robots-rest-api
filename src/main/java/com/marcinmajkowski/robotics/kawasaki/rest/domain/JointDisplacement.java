@@ -3,10 +3,13 @@ package com.marcinmajkowski.robotics.kawasaki.rest.domain;
 import static java.util.Objects.isNull;
 
 public class JointDisplacement {
-    private final double[] joints;
+    private double[] joints;
 
     public JointDisplacement(double[] joints) {
         this.joints = joints == null ? null : joints.clone();
+    }
+
+    public JointDisplacement() {
     }
 
     public double[] getJoints() {

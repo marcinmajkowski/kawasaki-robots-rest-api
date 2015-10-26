@@ -148,6 +148,24 @@ public class LocationService {
         return previousValue;
     }
 
+    public LocationVariable put(String name, Transformation transformation) {
+        LocationVariable previousValue = get(name);
+        //TODO
+        return previousValue;
+    }
+
+    public LocationVariable put(String name, JointDisplacement jointDisplacement) {
+        LocationVariable previousValue = get(name);
+        StringBuilder command = new StringBuilder("point ");
+        command.append(name).append(" = ").append(jointDisplacement.toInstructionParameter()).append("\r\n");
+        try {
+            tcpClient.getResponse(command.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return previousValue;
+    }
+
     public LocationVariable remove(String name) {
         LocationVariable previousValue = get(name);
         //TODO prevent injecting malicious command
