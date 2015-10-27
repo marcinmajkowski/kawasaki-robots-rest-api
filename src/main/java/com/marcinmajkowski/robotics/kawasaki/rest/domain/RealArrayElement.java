@@ -1,5 +1,6 @@
 package com.marcinmajkowski.robotics.kawasaki.rest.domain;
 
+//TODO this class probably will be removed soon and regular RealVariable will serve as array element
 public class RealArrayElement extends RealVariable {
     private int index;
 
@@ -7,7 +8,8 @@ public class RealArrayElement extends RealVariable {
     }
 
     public RealArrayElement(String name, int index, double value) {
-        super(name, value);
+        setName(name);
+        setValue(value);
         this.index = index;
     }
 

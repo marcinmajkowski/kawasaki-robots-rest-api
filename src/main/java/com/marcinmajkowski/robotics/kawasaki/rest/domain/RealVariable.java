@@ -4,18 +4,10 @@ import org.springframework.hateoas.ResourceSupport;
 
 public class RealVariable extends ResourceSupport {
     private String name;
+
     private Double value;
 
-    public RealVariable(String name, Double value) {
-        this.name = name;
-        this.value = value;
-    }
-
-    public RealVariable() {
-    }
-
     @Override
-
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -25,7 +17,6 @@ public class RealVariable extends ResourceSupport {
 
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         return !(value != null ? !value.equals(that.value) : that.value != null);
-
     }
 
     @Override

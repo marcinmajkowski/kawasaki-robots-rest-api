@@ -46,7 +46,10 @@ public class RealService {
                 int index = Integer.valueOf(matcher.group(2));
                 results.add(new RealArrayElement(name, index, value));
             } else {
-                results.add(new RealVariable(name, value));
+                RealVariable realVariable = new RealVariable();
+                realVariable.setName(name);
+                realVariable.setValue(value);
+                results.add(realVariable);
             }
         }
 //        String[] tokens = response.split("\\s+");
@@ -72,7 +75,10 @@ public class RealService {
         Matcher matcher = Pattern.compile(Pattern.quote(name) + " += +(\\d+(?:\\.\\d+)?)").matcher(response);
         if (matcher.find()) {
             double value = Double.parseDouble(matcher.group(1));
-            result = new RealVariable(name, value);
+            RealVariable realVariable = new RealVariable();
+            realVariable.setName(name);
+            realVariable.setValue(value);
+            result = realVariable;
         } else {
             matcher = Pattern.compile("(\\(P\\d+\\).*?)\\r?\\n").matcher(response);
             if (!matcher.find()) {

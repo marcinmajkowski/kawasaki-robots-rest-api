@@ -2,7 +2,9 @@ package com.marcinmajkowski.robotics.kawasaki.rest.domain;
 
 public class Program {
     private String name;
+
     private String content;
+
     private boolean isRunning;
 
     public String getName() {

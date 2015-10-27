@@ -6,27 +6,32 @@ import org.springframework.hateoas.ResourceSupport;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class LocationVariable /* PoseVariable */ extends ResourceSupport {
     private String name;
+
     private Transformation transformation;
+
     private JointDisplacement jointDisplacement;
-
-    public LocationVariable(String name, Transformation transformation, JointDisplacement jointDisplacement) {
-        this.name = name;
-        this.transformation = transformation;
-        this.jointDisplacement = jointDisplacement;
-    }
-
-    public LocationVariable() {
-    }
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Transformation getTransformation() {
         return transformation;
     }
 
+    public void setTransformation(Transformation transformation) {
+        this.transformation = transformation;
+    }
+
     public JointDisplacement getJointDisplacement() {
         return jointDisplacement;
+    }
+
+    public void setJointDisplacement(JointDisplacement jointDisplacement) {
+        this.jointDisplacement = jointDisplacement;
     }
 }

@@ -43,14 +43,25 @@ public class LocationService {
         double o = Double.parseDouble(tokens[22]);
         double a = Double.parseDouble(tokens[23]);
         double t = Double.parseDouble(tokens[24]);
-        Transformation transformation = new Transformation(x, y, z, o, a, t);
+        Transformation transformation = new Transformation();
+        transformation.setX(x);
+        transformation.setY(y);
+        transformation.setZ(z);
+        transformation.setO(o);
+        transformation.setA(a);
+        transformation.setT(t);
         //FIXME following will work correctly only if the robot has exactly 6 axis
         double[] joints = new double[6];
         for (int i = 0; i < joints.length; i++) {
             joints[i] = Double.parseDouble(tokens[7 + i]);
         }
-        JointDisplacement jointDisplacement = new JointDisplacement(joints);
-        return new LocationVariable("here", transformation, jointDisplacement);
+        JointDisplacement jointDisplacement = new JointDisplacement();
+        jointDisplacement.setJoints(joints);
+        LocationVariable locationVariable = new LocationVariable();
+        locationVariable.setName("here");
+        locationVariable.setTransformation(transformation);
+        locationVariable.setJointDisplacement(jointDisplacement);
+        return locationVariable;
     }
 
     public List<String> getAllNames() {
@@ -115,9 +126,18 @@ public class LocationService {
         double o = Double.parseDouble(tokens[4]);
         double a = Double.parseDouble(tokens[5]);
         double t = Double.parseDouble(tokens[6]);
-        Transformation transformation = new Transformation(x, y, z, o, a, t);
+        Transformation transformation = new Transformation();
+        transformation.setX(x);
+        transformation.setY(y);
+        transformation.setZ(z);
+        transformation.setO(o);
+        transformation.setA(a);
+        transformation.setT(t);
 
-        return new LocationVariable(tokens[0], transformation, null);
+        LocationVariable locationVariable = new LocationVariable();
+        locationVariable.setName(tokens[0]);
+        locationVariable.setTransformation(transformation);
+        return locationVariable;
     }
 
     public LocationVariable add(LocationVariable locationVariable) {

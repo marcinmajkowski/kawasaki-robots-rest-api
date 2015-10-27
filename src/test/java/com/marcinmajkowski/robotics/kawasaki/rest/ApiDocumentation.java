@@ -73,10 +73,22 @@ public class ApiDocumentation {
 
     @Test
     public void doublesSetExample() throws Exception {
+        RealVariable expectedResult1 = new RealVariable();
+        expectedResult1.setName("half");
+        expectedResult1.setValue(0.5);
+
+        RealVariable expectedResult2 = new RealVariable();
+        expectedResult2.setName("one");
+        expectedResult2.setValue(1.0);
+
+        RealVariable expectedResult3 = new RealVariable();
+        expectedResult3.setName("two");
+        expectedResult3.setValue(2.0);
+
         Set<RealVariable> expectedResults = new HashSet<>();
-        expectedResults.add(new RealVariable("half", 0.5));
-        expectedResults.add(new RealVariable("one", 1.0));
-        expectedResults.add(new RealVariable("two", 2.0));
+        expectedResults.add(expectedResult1);
+        expectedResults.add(expectedResult2);
+        expectedResults.add(expectedResult3);
 
         when(realServiceMock.getAll()).thenReturn(expectedResults);
 

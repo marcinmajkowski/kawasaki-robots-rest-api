@@ -1,19 +1,14 @@
 package com.marcinmajkowski.robotics.kawasaki.rest.domain;
 
-import static java.util.Objects.isNull;
-
 public class JointDisplacement {
     private double[] joints;
 
-    public JointDisplacement(double[] joints) {
-        this.joints = joints == null ? null : joints.clone();
-    }
-
-    public JointDisplacement() {
-    }
-
     public double[] getJoints() {
-        return isNull(joints) ? null : joints.clone();
+        return joints;
+    }
+
+    public void setJoints(double[] joints) {
+        this.joints = joints;
     }
 
     public String toInstructionParameter() {

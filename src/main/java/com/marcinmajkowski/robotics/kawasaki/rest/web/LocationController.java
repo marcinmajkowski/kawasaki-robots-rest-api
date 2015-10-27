@@ -79,8 +79,19 @@ public class LocationController {
 
     @RequestMapping(value = "/null", method = RequestMethod.GET)
     LocationVariable nullLocation() {
-        LocationVariable locationVariable = new LocationVariable("null", new Transformation(0, 0, 0, 0, 0, 0), null);
+        Transformation transformation = new Transformation();
+        transformation.setX(0);
+        transformation.setY(0);
+        transformation.setZ(0);
+        transformation.setO(0);
+        transformation.setA(0);
+        transformation.setT(0);
+
+        LocationVariable locationVariable = new LocationVariable();
+        locationVariable.setName("null");
+        locationVariable.setTransformation(transformation);
         locationVariable.add(linkTo(methodOn(LocationController.class).nullLocation()).withSelfRel());
+
         return locationVariable;
     }
 

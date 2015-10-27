@@ -2,23 +2,16 @@ package com.marcinmajkowski.robotics.kawasaki.rest.domain;
 
 public final class Transformation {
     private double x;
+
     private double y;
+
     private double z;
+
     private double o;
+
     private double a;
+
     private double t;
-
-    public Transformation(double x, double y, double z, double o, double a, double t) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.o = o;
-        this.a = a;
-        this.t = t;
-    }
-
-    public Transformation() {
-    }
 
     public double getX() {
         return x;
